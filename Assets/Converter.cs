@@ -9,6 +9,9 @@ public class Converter : MonoBehaviour
     public InputField F, C;
     public static string stringC, stringF;
     public static int Change;
+    static float check_time;
+    static double rValue;
+    static int count = 0;
 
     public static double FtoC(double f)
     {
@@ -24,10 +27,18 @@ public class Converter : MonoBehaviour
     {
         if (ForC == 1)
         {
+            if(double.Parse(F.text) == rValue) {
+                check_time = Time.realtimeSinceStartup - check_time;
+                Debug.Log( "check time : " + check_time.ToString("0.000") );
+            }
             C.text = FtoC(double.Parse(F.text)).ToString();
         }
         else
         {
+            if(double.Parse(C.text) == rValue) {
+                check_time = Time.realtimeSinceStartup - check_time;
+                Debug.Log( "check time : " + check_time.ToString("0.000") );
+            }
             F.text = CtoF(double.Parse(C.text)).ToString();
         }
     }
@@ -35,6 +46,13 @@ public class Converter : MonoBehaviour
     public void Start()
     {
         Change = -1;
+        check_time = Time.realtimeSinceStartup;
+    }
+
+    void PrintRandom() {
+        rValue = (double) Random.Range(-999, 1000) / 10.0;
+        Debug.Log("input[ "+count+" ] : " + rValue);
+        check_time = Time.realtimeSinceStartup;
     }
     void Update()
     {
@@ -42,6 +60,13 @@ public class Converter : MonoBehaviour
         {
             Convert(Change);
             Change = -1;
+        }
+
+        if (Input.GetKeyUp(KeyCode.Return)) {
+            C.text = "";
+            F.text = "";
+            PrintRandom();
+            count++;
         }
     }
 }
